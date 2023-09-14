@@ -1,0 +1,21 @@
+.playing_field {
+  display: grid;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  height: 100%;
+  width: auto;
+  aspect-ratio: 1 / 1;
+
+  grid-template: 1.25% repeat(25, 1fr) 1.25% / 1.25% repeat(25, 1fr) 2.125%;
+}
+.playing_field__img {
+  height: 100%;
+  width: auto;
+
+  object-fit: cover;
+  overflow: hidden;
+
+  grid-area: 1 / 1 / 28 / 28;
+}

@@ -1,3 +1,8 @@
+@font-face {
+  font-family: Limelight; /* Имя шрифта */
+  src: url('../../public/static/Limelight-Regular.ttf'); /* Путь к файлу со шрифтом */
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
