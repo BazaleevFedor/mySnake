@@ -1,16 +1,13 @@
-import {FunctionComponent} from "react";
+import {FunctionComponent, useContext} from "react";
 import styles from './styles.module.css'
+import {MySnakeContext} from "@/app/page";
 
-interface CopyrightProps {
-  text: string,
-}
+export const Copyright: FunctionComponent = () => {
+  const mySnakeContext = useContext(MySnakeContext);
 
-export const Copyright: FunctionComponent<CopyrightProps> = ({
-  text
-}) => {
   return (
     <div className={styles.copyright}>
-      {text}
+      {mySnakeContext.copyrightText}
     </div>
   )
 }
