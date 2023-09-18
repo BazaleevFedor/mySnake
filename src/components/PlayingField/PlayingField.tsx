@@ -28,26 +28,110 @@ const handleKeyDown = (key:  string, gameContext: GameContext) => {
   }
 }
 
-/*interface GameInterface {
+interface GameInterface {
   timeRender: number,
   snake: number[],
   setSnake: any,
-  food: null[],
+  food: number,
   setFood: any,
   mySnakeContext: MySnakeContext,
-}*/
+  gameContext: GameContext,
+}
 
 class Game {
-  constructor(context: MySnakeContext) {
-    this.
+  private _snake: number[];
+  private readonly _foodID: number;
+  private _setFood: any;
+  private _snakeSet: any;
+  private readonly _time: number;
+  private _mySnakeContext: MySnakeContext;
+  private _gameContext: GameContext;
+  private _timer: NodeJS.Timeout;
+
+  constructor(context: GameInterface) {
+    this._snake = context.snake;
+    this._snakeSet = context.setSnake;
+    this._foodID = context.food;
+    this._setFood = context.setFood;
+    this._time = context.timeRender;
+    this._mySnakeContext = context.mySnakeContext;
+    this._gameContext = context.gameContext;
+
+    this._run();
   }
 
-  _run() {
-    setTimeout(() => {}, );
+  private _run() {
+    let nextHead = this._nextBlockID();
+
+    this._snake.unshift(nextHead);
+    if (nextHead === this._foodID) {
+      // ToDo: переписать рандомайзер
+      this._setFood(Math.random()*this._mySnakeContext.cellCount);
+    } else {
+      this._snake.pop();
+    }
+
+    let count = 0;
+    this._snake.forEach((block) => {
+      if (block === nextHead) {
+        count++;
+      }
+    })
+
+    if (count < 2) {
+      this._snakeSet(this._snake);
+      this._timer = setTimeout(this._run, this._time);
+    } else {
+      alert('game over');
+    }
   }
 
-  stop() {
+  private _nextBlockID() {  // ToDo: упростить
+    let snakeHeadID = this._snake[this._snake.length - 1];
+    let tmp = this._isGoToWall();
 
+    if (tmp === -1) {
+      switch (this._gameContext.direction) {
+        case 'left':
+          tmp = snakeHeadID - 1;
+          break;
+        case 'right':
+          tmp = snakeHeadID + 1;
+          break;
+        case 'up':
+          tmp = snakeHeadID - this._mySnakeContext.fieldSize;
+          break;
+        case 'down':
+          tmp = snakeHeadID + this._mySnakeContext.fieldSize;
+          break;
+      }
+    }
+
+    return tmp;
+  }
+
+  private _isGoToWall() {
+    let id = this._snake[this._snake.length - 1];
+    let fieldSize = this._mySnakeContext.fieldSize;
+    let direction = this._gameContext.direction;
+
+    if (id % fieldSize === 0 && direction === 'left') {
+      return id + fieldSize - 1;
+    } else if (id % (fieldSize - 1) === 0  && direction === 'right') {
+      return id - fieldSize + 1;
+    } else if (id < fieldSize  && direction === 'up') {
+      return fieldSize**2 - fieldSize + id;
+    } else if (id > fieldSize**2 - fieldSize  && direction === 'down') {
+      return id % fieldSize;
+    } else {
+      return -1;
+    }
+  }
+
+  public stop() {
+    if (this._timer) {
+      clearTimeout(this._timer);
+    }
   }
 }
 

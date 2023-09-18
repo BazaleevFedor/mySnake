@@ -11,7 +11,7 @@ const FIELD_SIZE: number = 25;
 const CELL_COUNT: number = FIELD_SIZE**2;
 const UPDATE_TIME: number = 100;
 const SNAKE_START_POSITION: number | null = CELL_COUNT / 2;
-const FOOD_START_POSITION: number | null = null;
+const FOOD_START_POSITION: number = 77;
 
 const START_DIRECTION: string = 'right';
 
@@ -32,6 +32,7 @@ const mySnakeContext = {
   copyrightText: COPYRIGHT_TEXT,
 
   fieldSize: FIELD_SIZE,
+  cellCount: CELL_COUNT,
   updateTime: UPDATE_TIME,
   snakeStartPosition: SNAKE_START_POSITION,
   foodStartPosition: FOOD_START_POSITION,
