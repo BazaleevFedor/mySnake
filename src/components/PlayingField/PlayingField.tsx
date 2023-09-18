@@ -5,45 +5,60 @@ import {Food} from "@/components/Food/Food";
 import {GameContext, MySnakeContext} from "@/app/page";
 import {Snake} from "@/components/Snake/Snake";
 
-interface SnakeContext {
+interface GameContext {
   direction: string;
 }
 
-const handleKeyDown = (key:  string, mySnakeContext: SnakeContext) => {
+const handleKeyDown = (key:  string, gameContext: GameContext) => {
   switch (key) {
     case 'w' || 'W':
-      mySnakeContext.direction = 'up';
+      gameContext.direction = 'up';
       break;
     case 'a' || 'A':
-      mySnakeContext.direction = 'left';
+      gameContext.direction = 'left';
       break;
     case 's' || 'S':
-      mySnakeContext.direction = 'down';
+      gameContext.direction = 'down';
       break;
     case 'd' || 'D':
-      mySnakeContext.direction = 'right';
+      gameContext.direction = 'right';
       break;
     case 'Escape':
       break;  // ToDo: менюшка паузы
   }
 }
 
-interface GameInterface {
+/*interface GameInterface {
   timeRender: number,
   snake: number[],
   setSnake: any,
-  food: number,
+  food: null[],
   setFood: any,
+  mySnakeContext: MySnakeContext,
+}*/
+
+class Game {
+  constructor(context: MySnakeContext) {
+    this.
+  }
+
+  _run() {
+    setTimeout(() => {}, );
+  }
+
+  stop() {
+
+  }
 }
 
-const game = ({timeRender, snake, setSnake, food, setFood}: GameInterface) => {
+/*const game = ({timeRender, snake, setSnake, food, setFood, mySnakeContext}: GameInterface) => {
   const snakeHead: number = snake[snake.length - 1];
-  const nextBlock: number = nextBlock();
+  //const nextBlock: number = getNextBlock(snakeHead, mySnakeContext.);
 
   // ToDo: сам процесс игры
 
   setTimeout(() => game({timeRender, snake, setSnake, food, setFood}), timeRender);
-}
+}*/
 
 export const PlayingField: FunctionComponent = () => {
   const mySnakeContext = useContext(MySnakeContext);
@@ -56,9 +71,10 @@ export const PlayingField: FunctionComponent = () => {
   useEffect(() => {
     window.addEventListener('keydown', (e) => handleKeyDown(e.key, gameContext));  // клавиатура
 
-    game(mySnakeContext.updateTime);
+    const game = new Game();
 
     return () => {
+      game.stop();
       window.removeEventListener('keydown', (e) => handleKeyDown(e.key, gameContext));  // клавиатура
     }
   }, []);
