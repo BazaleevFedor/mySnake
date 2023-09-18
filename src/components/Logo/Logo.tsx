@@ -1,7 +1,7 @@
 import {FunctionComponent, useContext} from "react";
 import Image from 'next/image';
 import styles from './styles.module.css'
-import {MySnakeContext} from '@/app/page';
+import {MySnakeContext} from '@/app/context';
 
 export const Logo: FunctionComponent = () => {
   const mySnakeContext = useContext(MySnakeContext);
