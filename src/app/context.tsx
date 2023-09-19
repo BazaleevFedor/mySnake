@@ -1,10 +1,10 @@
 import React from "react";
 
-const FIELD_SIZE: number = 20;
+const FIELD_SIZE: number = window.innerWidth > 600 ? 25 : 15;
 const CELL_COUNT: number = FIELD_SIZE**2;
 const UPDATE_TIME: number = 100;
-const FOOD_START_POSITION: number = Math.ceil(Math.random()*CELL_COUNT);
-const SNAKE_START_POSITION: number = Math.round(CELL_COUNT / 2);
+const FOOD_START_POSITION: number = 77;
+const SNAKE_START_POSITION: number = Math.ceil(CELL_COUNT / 2);
 const START_DIRECTION: string = 'right';
 
 

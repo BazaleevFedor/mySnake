@@ -6,6 +6,7 @@ import {MySnakeContext} from "@/app/context";
 import {Snake} from "@/components/Snake/Snake";
 import {InfoField} from "@/components/InfoField/InfoField";
 import {createPortal} from "react-dom";
+import { useSwipeable } from 'react-swipeable';
 
 export const getNextID = (curId: number, direction: string, fieldSize: number, cellCount: number) => {
   let nextID: number = curId + 1;
@@ -60,6 +61,29 @@ export const getNextDirection = (key: string, curDirection: string) => {
         curDirection = 'right';
       }
       break;
+  }
+
+  return curDirection;
+}
+
+export const getDirectionBySwipe = (event: TouchEvent, curDirection: string, startX: number, startY: number) => {
+  const deltaX = event.changedTouches[0].clientX - startX;
+  const deltaY = event.changedTouches[0].clientY - startY;
+
+  if (Math.abs(deltaX) > Math.abs(deltaY) && curDirection !== 'left' && curDirection !== 'right') {
+    if (deltaX > 0) {
+      curDirection = 'right';
+    } else {
+      curDirection = 'left';
+    }
+  } else {
+    if (curDirection !== 'up' && curDirection !== 'down') {
+      if (deltaY > 0) {
+        curDirection = 'down';
+      } else {
+        curDirection = 'up';
+      }
+    }
   }
 
   return curDirection;
@@ -120,7 +144,18 @@ export const PlayingField: FunctionComponent = () => {
   let [direction, setDirection] = useState(mySnakeContext.directionStart);
   let [pause, setPause] = useState('ok');
 
-  useEffect(() => { // ToDo: listener for phone
+  useEffect(() => {
+    let startX: number, startY: number;
+
+    document.addEventListener('touchstart', function (e) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    });
+
+    window.addEventListener('touchend', (event) => {
+      setDirection((prevState) => getDirectionBySwipe(event, prevState, startX, startY));
+    });
+
     window.addEventListener('keydown', (event) => {
       setDirection((prevState) => getNextDirection(event.key, prevState));
     });
