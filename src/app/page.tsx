@@ -9,12 +9,14 @@ import {MySnakeContext, mySnakeContext} from './context';
 
 export default function Home() {
   return (
-    <MySnakeContext.Provider value={mySnakeContext}>
-      <div className={styles.main}>
-        <Logo />
-        <PlayingField />
-        <Copyright />
-      </div>
-    </MySnakeContext.Provider>
+    <div className={'main'}>
+      <MySnakeContext.Provider value={mySnakeContext}>
+        <div className={styles.main}>
+          <Logo />
+          <PlayingField />
+          <Copyright />
+        </div>
+      </MySnakeContext.Provider>
+    </div>
   );
 }

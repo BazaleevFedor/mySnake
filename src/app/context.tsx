@@ -13,6 +13,9 @@ const FIELD_IMG: string = '/static/square_playing_field.svg';
 const FOOD_IMG: string = '/static/food.svg';
 const SNAKE_BLACK_IMG: string = '/static/square_black.svg';
 const SNAKE_BLUE_IMG: string = '/static/square_blue.svg';
+const BLOCK_WON: string = '/static/block_won.svg';
+const BLOCK_LOSE: string = '/static/block_lose.svg';
+const BLOCK_PAUSE: string = '/static/block_pause.svg';
 const COPYRIGHT_TEXT: string = '© 2022, BanzayCorp, Inc';
 
 export const mySnakeContext = {
@@ -22,6 +25,9 @@ export const mySnakeContext = {
   snakeBlack: SNAKE_BLACK_IMG,
   snakeBlue: SNAKE_BLUE_IMG,
   copyrightText: COPYRIGHT_TEXT,
+  blockWon: BLOCK_WON,
+  blockLose: BLOCK_LOSE,
+  blockPause: BLOCK_PAUSE,
 
   fieldSize: FIELD_SIZE,
   cellCount: CELL_COUNT,
