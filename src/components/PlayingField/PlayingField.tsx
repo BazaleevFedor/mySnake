@@ -85,14 +85,18 @@ const run = (snake: number[], food: number, direction: string, fieldSize: number
     snake.pop();
   }
 
-  return {food: food, snake: snake, gameStatus: status};
+  return {food: food, snake: snake, status: status};
 }
 
 export const PlayingField: FunctionComponent = () => {
   const mySnakeContext = useContext(MySnakeContext);
 
-  let [snake, setSnake] = useState<number[]>([mySnakeContext.snakeStartPosition]);
-  let [food, setFood] = useState<number>(mySnakeContext.foodStartPosition);
+  let [gameState, setGameState] = useState({
+    snake: [mySnakeContext.snakeStartPosition],
+    food: mySnakeContext.foodStartPosition,
+    status: 'ok',
+  });
+
   let [direction, setDirection] = useState<string>(mySnakeContext.directionStart);
 
   useEffect(() => { // ToDo: listener for phone
@@ -108,14 +112,12 @@ export const PlayingField: FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      const res = run([...snake], food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount);
-
-      setFood(res.food);
-      setSnake(res.snake);
-
-    }, mySnakeContext.updateTime)
-  }, [snake]);
+    if (gameState.status === 'ok') {
+      setTimeout(() => {
+        setGameState(run([...gameState.snake], gameState.food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount));
+      }, mySnakeContext.updateTime)
+    }
+  }, [gameState]);
 
   return (
     <div className={styles.playing_field} style={{ gridTemplate: `1.25% repeat(${mySnakeContext.fieldSize}, 1fr) 1.25% / 1.25% repeat(${mySnakeContext.fieldSize}, 1fr) 2.125%` }}>
@@ -127,8 +129,8 @@ export const PlayingField: FunctionComponent = () => {
              style={{ gridArea: `1 / 1 / ${mySnakeContext.fieldSize + 3} / ${mySnakeContext.fieldSize + 3}` }}
       />
 
-      <Snake snake={snake}/>
-      <Food position={food}/>
+      <Snake snake={gameState.snake}/>
+      <Food position={gameState.food}/>
     </div>
   )
 } /*ToDo: fix this shit*!/*/
