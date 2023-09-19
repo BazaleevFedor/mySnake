@@ -40,6 +40,54 @@ const getNextID = (curId: number, direction: string, fieldSize: number, cellCoun
   return nextID;
 }
 
+const getNextDirection = (key: string, curDirection: string) => {  // ToDo: fix if hooks
+  switch (key) {
+    case 'w' || 'W':
+      if (curDirection !== 'up' && curDirection !== 'down') {
+        return 'up';
+      }
+      break;
+    case 'a' || 'A':
+      if (curDirection !== 'left' && curDirection !== 'right') {
+        return 'left';
+      }
+      break;
+    case 's' || 'S':
+      if (curDirection !== 'up' && curDirection !== 'down') {
+        return 'down';
+      }
+      break;
+    case 'd' || 'D':
+      if (curDirection !== 'left' && curDirection !== 'right') {
+        return 'right';
+      }
+      break;
+    case 'Escape':
+      break;  // ToDo: add pause menu
+  }
+
+  return curDirection;
+}
+
+const run = (snake: number[], food: number, direction: string, fieldSize: number, cellCount: number) => {
+  let snakeHeadID = snake[0];
+  let nextID = getNextID(snakeHeadID, direction, fieldSize, cellCount);
+  let status = 'ok';
+
+  if (nextID === food) {
+    snake.unshift(nextID);
+    food = Math.ceil(Math.random()*cellCount);  // ToDo: fix random
+  } else if (snake.includes(nextID) && nextID !== snake.at(-1)) {
+    alert('game over');
+    status = 'game over'
+  } else {
+    snake.unshift(nextID);
+    snake.pop();
+  }
+
+  return {food: food, snake: snake, gameStatus: status};
+}
+
 export const PlayingField: FunctionComponent = () => {
   const mySnakeContext = useContext(MySnakeContext);
 
@@ -47,65 +95,27 @@ export const PlayingField: FunctionComponent = () => {
   let [food, setFood] = useState<number>(mySnakeContext.foodStartPosition);
   let [direction, setDirection] = useState<string>(mySnakeContext.directionStart);
 
-  const handleKeyDown = (ev: KeyboardEvent) => {  // ToDo: fix if hok
-    switch (ev.key) {
-      case 'w' || 'W':
-        if (direction === 'left' || direction === 'right') {
-          setDirection('up');
-        }
-        break;
-      case 'a' || 'A':
-        if (direction !== 'left' && direction !== 'right') {
-          setDirection('left');
-        }
-        break;
-      case 's' || 'S':
-        if (direction !== 'up' && direction !== 'down') {
-          setDirection('down');
-        }
-        break;
-      case 'd' || 'D':
-        if (direction !== 'left' && direction !== 'right') {
-          setDirection('right');
-        }
-        break;
-      case 'Escape':
-        break;  // ToDo: менюшка паузы
-    }
-  }
-
-  const run = () => {
-    let snakeHeadID = snake[0];
-    let nextID = getNextID(snakeHeadID, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount);
-
-    if (nextID === food) {
-      snake.unshift(nextID);
-
-      food = Math.ceil(Math.random()*mySnakeContext.cellCount);  // ToDo: нормальный рандом
-      setFood(food);
-      setSnake([...snake]);
-    } else if (snake.includes(nextID) && nextID !== snake.at(-1)) {
-      alert('game over');
-    } else {
-      snake.unshift(nextID);
-      snake.pop();
-      setSnake([...snake]);
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);  // клавиатура
+  useEffect(() => { // ToDo: listener for phone
+    window.addEventListener('keydown', (event) => {
+      setDirection((prevState) => getNextDirection(event.key, prevState));
+    });
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);  // клавиатура
+      window.removeEventListener('keydown', (event) => {
+        setDirection((prevState) => getNextDirection(event.key, prevState));
+      });
     }
   }, []);
 
   useEffect(() => {
     setTimeout(() => {
-      run();
+      const res = run([...snake], food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount);
+
+      setFood(res.food);
+      setSnake(res.snake);
+
     }, mySnakeContext.updateTime)
-  }, [snake, food]);
+  }, [snake]);
 
   return (
     <div className={styles.playing_field} style={{ gridTemplate: `1.25% repeat(${mySnakeContext.fieldSize}, 1fr) 1.25% / 1.25% repeat(${mySnakeContext.fieldSize}, 1fr) 2.125%` }}>
@@ -121,4 +131,4 @@ export const PlayingField: FunctionComponent = () => {
       <Food position={food}/>
     </div>
   )
-}
+} /*ToDo: fix this shit*!/*/

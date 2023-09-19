@@ -1,16 +1,15 @@
 import React from "react";
 
-const FIELD_SIZE: number = 40;
+const FIELD_SIZE: number = 25;
 const CELL_COUNT: number = FIELD_SIZE**2;
 const UPDATE_TIME: number = 100;
-const SNAKE_START_POSITION: number | null = Math.round(CELL_COUNT / 2);
 const FOOD_START_POSITION: number = 77;
-
+const SNAKE_START_POSITION: number | null = Math.round(CELL_COUNT / 2);
 const START_DIRECTION: string = 'right';
 
 
 const LOGO_IMG: string = '/static/logo_text.svg';
-const FIELD_IMG: string = '/static/square_playing_field1.svg';
+const FIELD_IMG: string = '/static/square_playing_field.svg';
 const FOOD_IMG: string = '/static/food.svg';
 const SNAKE_BLACK_IMG: string = '/static/square_black.svg';
 const SNAKE_BLUE_IMG: string = '/static/square_blue.svg';
