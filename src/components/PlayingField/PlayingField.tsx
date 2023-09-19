@@ -6,7 +6,6 @@ import {MySnakeContext} from "@/app/context";
 import {Snake} from "@/components/Snake/Snake";
 import {InfoField} from "@/components/InfoField/InfoField";
 import {createPortal} from "react-dom";
-import { useSwipeable } from 'react-swipeable';
 
 export const getNextID = (curId: number, direction: string, fieldSize: number, cellCount: number) => {
   let nextID: number = curId + 1;
