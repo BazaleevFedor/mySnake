@@ -1,6 +1,6 @@
 import React from "react";
 
-const FIELD_SIZE: number = window.innerWidth > 600 ? 25 : 15;
+const FIELD_SIZE: number = 15;
 const CELL_COUNT: number = FIELD_SIZE**2;
 const UPDATE_TIME: number = 100;
 const FOOD_START_POSITION: number = 77;
