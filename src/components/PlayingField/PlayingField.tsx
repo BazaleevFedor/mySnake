@@ -5,7 +5,7 @@ import {Food} from "@/components/Food/Food";
 import {MySnakeContext} from "@/app/context";
 import {Snake} from "@/components/Snake/Snake";
 
-const getNextID = (curId: number, direction: string, fieldSize: number, cellCount: number) => {
+export const getNextID = (curId: number, direction: string, fieldSize: number, cellCount: number) => {
   let nextID: number = curId + 1;
 
   if (curId < fieldSize && direction === 'up') {
@@ -40,7 +40,7 @@ const getNextID = (curId: number, direction: string, fieldSize: number, cellCoun
   return nextID;
 }
 
-const getNextDirection = (key: string, curDirection: string) => {  // ToDo: fix if hooks
+export const getNextDirection = (key: string, curDirection: string) => {
   switch (key) {
     case 'w' || 'W':
       if (curDirection !== 'up' && curDirection !== 'down') {
@@ -69,7 +69,7 @@ const getNextDirection = (key: string, curDirection: string) => {  // ToDo: fix 
   return curDirection;
 }
 
-const run = (snake: number[], food: number, direction: string, fieldSize: number, cellCount: number) => {
+export const run = (snake: number[], food: number, direction: string, fieldSize: number, cellCount: number) => {
   let snakeHeadID = snake[0];
   let nextID = getNextID(snakeHeadID, direction, fieldSize, cellCount);
   let status = 'ok';
