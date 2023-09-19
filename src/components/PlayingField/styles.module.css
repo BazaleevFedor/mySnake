@@ -1,16 +1,15 @@
 .playing_field {
   display: grid;
 
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
 
-  height: 100%;
-  width: auto;
+  height: auto;
+  max-width: 98vw;
   aspect-ratio: 1 / 1;
 }
 .playing_field__img {
-  height: 100%;
-  width: auto;
+  height: auto;
+  max-width: 100%;
 
   object-fit: cover;
   overflow: hidden;
