@@ -12,16 +12,12 @@ export const getNextID = (curId: number, direction: string, fieldSize: number, c
 
   if (curId < fieldSize && direction === 'up') {
     nextID = curId + cellCount - fieldSize;
-    console.log('up');
   } else if (curId >= cellCount - fieldSize && direction === 'down') {
     nextID = curId % fieldSize;
-    console.log('down');
   } else if (curId % fieldSize === 0 && direction === 'left') {
     nextID = curId + fieldSize - 1;
-    console.log('left');
   } else if (curId % fieldSize === fieldSize - 1 && direction === 'right') {
     nextID = curId - fieldSize + 1;
-    console.log('right');
   } else {
     switch (direction) {
       case 'right':
@@ -42,32 +38,33 @@ export const getNextID = (curId: number, direction: string, fieldSize: number, c
   return nextID;
 }
 
-export const getNextDirection = (key: string, curDirection: { direction: string; status: string; }) => {
+export const getNextDirection = (key: string, curDirection: string) => {
   switch (key) {
     case 'w' || 'W':
-      if (curDirection.direction !== 'up' && curDirection.direction !== 'down') {
-        curDirection.direction = 'up';
+      if (curDirection !== 'up' && curDirection !== 'down') {
+        curDirection = 'up';
       }
       break;
     case 'a' || 'A':
-      if (curDirection.direction !== 'left' && curDirection.direction !== 'right') {
-        curDirection.direction = 'left';
+      if (curDirection !== 'left' && curDirection !== 'right') {
+        curDirection = 'left';
       }
       break;
     case 's' || 'S':
-      if (curDirection.direction !== 'up' && curDirection.direction !== 'down') {
-        curDirection.direction = 'down';
+      if (curDirection !== 'up' && curDirection !== 'down') {
+        curDirection = 'down';
       }
       break;
     case 'd' || 'D':
-      if (curDirection.direction !== 'left' && curDirection.direction !== 'right') {
-        curDirection.direction = 'right';
+      if (curDirection !== 'left' && curDirection !== 'right') {
+        curDirection = 'right';
       }
       break;
   }
 
   return curDirection;
 }
+
 export const getPause = (key: string, status: string) => {
   if (key === 'Escape') {
     if (status === 'ok') {
@@ -80,20 +77,25 @@ export const getPause = (key: string, status: string) => {
   return status;
 }
 
-
 export const run = (snake: number[], food: number, direction: string, fieldSize: number, cellCount: number) => {
   let snakeHeadID = snake[0];
   let nextID = getNextID(snakeHeadID, direction, fieldSize, cellCount);
   let status = 'ok';
 
   if (nextID === food) {
-    if (snake.length === cellCount - 1) {
-      status = 'won';
-      food = -1;
-    } else {
-      food = Math.ceil(Math.random()*cellCount);  // ToDo: fix random
-    }
     snake.unshift(nextID);
+    if (snake.length === cellCount) {
+      status = 'won';
+    } else {
+      const snakeSet = new Set(snake);
+
+      food = Math.ceil(Math.random()*(cellCount - snake.length));
+      for (let i = 0; i <= food; i++) {
+        if (snakeSet.has(i)) {
+          food++;
+        }
+      }
+    }
   } else if (snake.includes(nextID) && nextID !== snake.at(-1)) {
     status = 'lose'
   } else {
@@ -115,11 +117,7 @@ export const PlayingField: FunctionComponent = () => {
     status: 'ok',
   });
 
-  let [direction, setDirection] = useState({
-    direction: mySnakeContext.directionStart,
-    status: 'ok',
-  });
-
+  let [direction, setDirection] = useState(mySnakeContext.directionStart);
   let [pause, setPause] = useState('ok');
 
   useEffect(() => { // ToDo: listener for phone
@@ -135,18 +133,20 @@ export const PlayingField: FunctionComponent = () => {
       window.removeEventListener('keydown', (event) => {
         setDirection((prevState) => getNextDirection(event.key, prevState));
       });
+
+      window.removeEventListener('keydown', (event) => {
+        setPause((prevState) => getPause(event.key, prevState));
+      });
     }
   }, []);
 
   useEffect(() => {
     if (gameState.status === 'ok' && pause === 'ok') {
-      console.log(gameState.status)
       timer = setTimeout(() => {
-        setGameState(run([...gameState.snake], gameState.food, direction.direction, mySnakeContext.fieldSize, mySnakeContext.cellCount));
+        setGameState(run([...gameState.snake], gameState.food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount));
       }, mySnakeContext.updateTime)
     } else {
       clearTimeout(timer);
-      console.log(gameState.status, pause)
     }
   }, [gameState, pause]);
 
@@ -161,7 +161,7 @@ export const PlayingField: FunctionComponent = () => {
       />
 
       <Snake snake={gameState.snake}/>
-      { gameState.food > -1 && <Food position={gameState.food}/>}
+      { gameState.status !== 'won' && <Food position={gameState.food}/>}
 
       { gameState.status !== 'ok' && createPortal(<InfoField status={gameState.status}/>, document.body) }
       { gameState.status === 'ok' && pause !== 'ok' && createPortal(<InfoField status={pause}/>, document.body) }
