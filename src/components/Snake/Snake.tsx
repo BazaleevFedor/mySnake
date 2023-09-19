@@ -1,25 +1,16 @@
-/*
-import {FunctionComponent, useContext} from "react";
-import Image from 'next/image';
-import styles from './styles.module.css';
-import {FoodContext} from '@/app/page';
+import {FunctionComponent} from "react";
+import {SnakeBlock} from "@/components/SnakeBlock/SnakeBlock";
 
 interface SnakeProps {
-  position: number,
+  snake: number[],
 }
 
 export const Snake: FunctionComponent<SnakeProps> = ({
-                                                     position
-                                                   }) => {
-  const snakeImgPath = useContext(SnakeContext);
+  snake,
+}) => {
   return (
-    <div className={styles.food}>
-      <Image src={snakeImgPath}
-             alt="Food"
-             width={37.7}
-             height={32}
-             className={styles.food__img}
-      />
-    </div>
-  )
-}*/
+    snake.map((block, index) => (
+      <SnakeBlock key={index} position={block} isBlack={index % 2 === 1} />
+    ))
+  );
+}

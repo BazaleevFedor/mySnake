@@ -1,17 +1,14 @@
-import {FunctionComponent} from "react";
+import {FunctionComponent, useContext} from "react";
 import Image from 'next/image';
 import styles from './styles.module.css'
+import {MySnakeContext} from '@/app/context';
 
-interface LogoProps {
-  imgPath: string,
-}
+export const Logo: FunctionComponent = () => {
+  const mySnakeContext = useContext(MySnakeContext);
 
-export const Logo: FunctionComponent<LogoProps> = ({
-  imgPath
-}) => {
   return (
     <div className={styles.logo}>
-      <Image src={imgPath}
+      <Image src={mySnakeContext.logo}
              alt="MySnake"
              width={262}
              height={120}

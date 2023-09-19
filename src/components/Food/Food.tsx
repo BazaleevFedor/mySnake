@@ -1,7 +1,7 @@
 import {FunctionComponent, useContext} from "react";
 import Image from 'next/image';
 import styles from './styles.module.css';
-import {FoodContext} from '@/app/page';
+import {MySnakeContext} from "@/app/context";
 
 interface FoodProps {
   position: number,
@@ -10,10 +10,11 @@ interface FoodProps {
 export const Food: FunctionComponent<FoodProps> = ({
   position
 }) => {
-  const foodImgPath = useContext(FoodContext);
+  const mySnakeContext = useContext(MySnakeContext);
+
   return (
-    <div className={styles.food} style={{ gridArea: position +  '/' + position }}>
-      <Image src={foodImgPath}
+    <div className={styles.food} style={{ gridArea: ((n)=>{ return `${Math.floor(n / mySnakeContext.fieldSize) + 2} / ${n - Math.floor(n / mySnakeContext.fieldSize)*mySnakeContext.fieldSize + 2}` })(position)  }}>
+      <Image src={mySnakeContext.food}
              alt="Food"
              width={37.7}
              height={32}
