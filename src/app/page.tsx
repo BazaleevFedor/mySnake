@@ -4,6 +4,7 @@ import {Logo} from '@/components/Logo/Logo';
 import {PlayingField} from "@/components/PlayingField/PlayingField";
 import {Copyright} from "@/components/Copyright/Copyright";
 import styles from './styles.module.css'
+import Head from 'next/head';
 
 import {MySnakeContext, mySnakeContext} from './context';
 

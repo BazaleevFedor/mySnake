@@ -3,4 +3,11 @@
   grid-template-rows: 12vh 82vh 6vh;
 }
 
+@media (max-width: 600px) {
+  .main {
+    grid-template-rows: 15% 80% 5%;
+    height: 92vh;
+  }
+}
+
 

@@ -13,7 +13,7 @@ export const Food: FunctionComponent<FoodProps> = ({
   const mySnakeContext = useContext(MySnakeContext);
 
   return (
-    <div className={styles.food} style={{ gridArea: ((n)=>{ return `${Math.floor(n / mySnakeContext.fieldSize) + 2} / ${n - Math.floor(n / mySnakeContext.fieldSize)*mySnakeContext.fieldSize + 2}` })(position)  }}>
+    <div className={styles.food} style={ { gridArea: ((n)=>{ return `${Math.floor(n / mySnakeContext.fieldSize) + 2} / ${n - Math.floor(n / mySnakeContext.fieldSize)*mySnakeContext.fieldSize + 2}` })(position)}  /* ToDo: refactoring this shit */}>
       <Image src={mySnakeContext.food}
              alt="Food"
              width={37.7}

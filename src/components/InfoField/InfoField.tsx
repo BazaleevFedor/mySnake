@@ -12,25 +12,23 @@ export const InfoField: FunctionComponent<InfoFieldProps> = ({
 }) => {
   const mySnakeContext = useContext(MySnakeContext);
 
+  let src = mySnakeContext.blockLose;
+  switch (status) {
+    case 'pause':
+      src = mySnakeContext.blockPause;
+      break;
+    case 'won':
+      src = mySnakeContext.blockWon;
+      break;
+  }
+
   return (
     <div className={styles.info_block}>
-      {status === 'won' && <Image src={mySnakeContext.blockWon}
+      {src && <Image src={src}
              alt="infoBlock"
              width={32}
              height={32}
              className={styles.info_block__img}
-      />}
-      {status === 'lose' && <Image src={mySnakeContext.blockLose}
-            alt="infoBlock"
-            width={32}
-            height={32}
-            className={styles.info_block__img}
-      />}
-      {status === 'pause' && <Image src={mySnakeContext.blockPause}
-            alt="infoBlock"
-            width={32}
-            height={32}
-            className={styles.info_block__img}
       />}
     </div>
 )
