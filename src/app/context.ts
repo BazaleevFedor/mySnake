@@ -1,17 +1,18 @@
 import React from "react";
 
-let fieldSize = 25;
+/*let fieldSize = 25;
 let updateTime = 100;
+let phone = false;
 
 if (typeof window !== "undefined") {
   if (window.innerWidth < 600) {
     fieldSize = 10;
     updateTime = 120;
   }
-}
+}*/
 
-const FIELD_SIZE: number = fieldSize;
-const UPDATE_TIME: number = updateTime;
+const FIELD_SIZE: number = 25;
+const UPDATE_TIME: number = 100;
 const CELL_COUNT: number = FIELD_SIZE**2;
 const FOOD_START_POSITION: number = 77;
 const SNAKE_START_POSITION: number = Math.ceil(CELL_COUNT / 2);
