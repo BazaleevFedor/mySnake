@@ -65,7 +65,7 @@ export const PlayingField: FunctionComponent = () => {
         setPause((prevState) => getPause(event.key, prevState));
       });
     }
-  }, []); // listeners
+  }, [mySnakeContext]); // listeners
 
   useEffect(() => {
     if (gameState.status === 'ok' && pause === 'ok') {
