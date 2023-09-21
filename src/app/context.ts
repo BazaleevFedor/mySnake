@@ -4,12 +4,12 @@ const FIELD_SIZE_PC: number = 25;
 const UPDATE_TIME_PC: number = 100;
 
 export const FIELD_SIZE_MOBIL: number = 10;
-export const UPDATE_TIME_MOBIL: number = 130;
+export const UPDATE_TIME_MOBIL: number = 140;
 
 
 const FOOD_POSITION_DEFAULT: number = 0;
 const CELL_COUNT_DEFAULT: number = 0;
-const SNAKE_POSITION_DEFAULT: number = 0;
+const SNAKE_POSITION_DEFAULT: number = -1;
 const START_DIRECTION: string = 'right';
 
 

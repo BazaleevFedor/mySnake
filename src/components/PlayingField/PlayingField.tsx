@@ -2,10 +2,11 @@ import React, {FunctionComponent, useContext, useEffect, useState} from "react";
 import Image from 'next/image';
 import styles from './styles.module.css'
 import {Food} from "@/components/Food/Food";
-import {MySnakeContext} from "@/app/context";
+import {FIELD_SIZE_MOBIL, mySnakeContext, MySnakeContext, UPDATE_TIME_MOBIL} from "@/app/context";
 import {Snake} from "@/components/Snake/Snake";
 import {InfoField} from "@/components/InfoField/InfoField";
 import {createPortal} from "react-dom";
+import {isMobile} from "react-device-detect";
 
 let timer: NodeJS.Timeout;
 export const PlayingField: FunctionComponent = () => {
@@ -16,7 +17,7 @@ export const PlayingField: FunctionComponent = () => {
   let [gameState, setGameState] = useState({
     snake: [mySnakeContext.snakeStartPosition],
     food: mySnakeContext.foodStartPosition,
-    status: 'ok',
+    status: 'init',
   });
 
   useEffect(() => {
@@ -65,12 +66,17 @@ export const PlayingField: FunctionComponent = () => {
         setPause((prevState) => getPause(event.key, prevState));
       });
     }
-  }, [mySnakeContext]); // listeners
+  }, []); // listeners
 
   useEffect(() => {
-    if (gameState.status === 'ok' && pause === 'ok') {
+    if (gameState.status === 'ok' && pause === 'ok' || gameState.status === 'init') {
       timer = setTimeout(() => {
-        setGameState(run([...gameState.snake], gameState.food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount));
+        setGameState(() => {
+          if (gameState.snake[0] === -1) {
+            return {food: mySnakeContext.foodStartPosition, snake: [mySnakeContext.snakeStartPosition], status: 'ok'}
+          }
+          return run([...gameState.snake], gameState.food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount);
+        });
       }, mySnakeContext.updateTime)
     } else {
       clearTimeout(timer);
@@ -87,11 +93,14 @@ export const PlayingField: FunctionComponent = () => {
              style={{ gridArea: `1 / 1 / ${mySnakeContext.fieldSize + 3} / ${mySnakeContext.fieldSize + 3}` } /* ToDo: refactoring this shit */}
       />
 
-      <Snake snake={gameState.snake}/>
-
-      { gameState.status !== 'won' && <Food position={gameState.food}/>}
-      { gameState.status !== 'ok' && createPortal(<InfoField status={gameState.status}/>, document.body)}
-      { gameState.status === 'ok' && pause !== 'ok' && createPortal(<InfoField status={pause}/>, document.body) }
+      { gameState.status !== 'init' &&
+        <>
+          <Snake snake={gameState.snake}/>
+          { gameState.status !== 'won' && <Food position={gameState.food}/>}
+          { gameState.status !== 'ok' && createPortal(<InfoField status={gameState.status}/>, document.body)}
+          { gameState.status === 'ok' && pause !== 'ok' && createPortal(<InfoField status={pause}/>, document.body) }
+        </>
+      }
     </div>
   )
 }
