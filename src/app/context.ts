@@ -1,21 +1,15 @@
 import React from "react";
 
-/*let fieldSize = 25;
-let updateTime = 100;
-let phone = false;
+const FIELD_SIZE_PC: number = 25;
+const UPDATE_TIME_PC: number = 100;
 
-if (typeof window !== "undefined") {
-  if (window.innerWidth < 600) {
-    fieldSize = 10;
-    updateTime = 120;
-  }
-}*/
+export const FIELD_SIZE_MOBIL: number = 10;
+export const UPDATE_TIME_MOBIL: number = 140;
 
-const FIELD_SIZE: number = 25;
-const UPDATE_TIME: number = 100;
-const CELL_COUNT: number = FIELD_SIZE**2;
-const FOOD_START_POSITION: number = 77;
-const SNAKE_START_POSITION: number = Math.ceil(CELL_COUNT / 2);
+
+const FOOD_POSITION_DEFAULT: number = 0;
+const CELL_COUNT_DEFAULT: number = 0;
+const SNAKE_POSITION_DEFAULT: number = -1;
 const START_DIRECTION: string = 'right';
 
 
@@ -40,11 +34,11 @@ export const mySnakeContext = {
   blockLose: BLOCK_LOSE,
   blockPause: BLOCK_PAUSE,
 
-  fieldSize: FIELD_SIZE,
-  cellCount: CELL_COUNT,
-  updateTime: UPDATE_TIME,
-  snakeStartPosition: SNAKE_START_POSITION,
-  foodStartPosition: FOOD_START_POSITION,
+  fieldSize: FIELD_SIZE_PC,
+  cellCount: CELL_COUNT_DEFAULT,
+  updateTime: UPDATE_TIME_PC,
+  snakeStartPosition: SNAKE_POSITION_DEFAULT,
+  foodStartPosition: FOOD_POSITION_DEFAULT,
   directionStart: START_DIRECTION,
 }
 
