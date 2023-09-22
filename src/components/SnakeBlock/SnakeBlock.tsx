@@ -28,19 +28,4 @@ export const SnakeBlock: FunctionComponent<SnakeBlockProps> = ({
     </div>
   )
 }
-/*let nextPos = async () => {
-  if (gameState.snake[0] === -1) {
-    // return {food: mySnakeContext.foodStartPosition, snake: [mySnakeContext.snakeStartPosition], status: 'ok'}
-    let arr = [0];
-    for (let i = 624; i > 25; i--) {
-      arr.push(i);
-    }
 
-    return {food: mySnakeContext.foodStartPosition, snake: arr, status: 'ok'}
-  }
-  return run([...gameState.snake], gameState.food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount);
-}
-
-timer = setTimeout(() => {
-  nextPos().then(setGameState).catch(alert);
-}, mySnakeContext.updateTime);*/

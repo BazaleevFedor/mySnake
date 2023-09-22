@@ -37,7 +37,7 @@ export const mySnakeContext = {
   fieldSize: FIELD_SIZE_PC,
   cellCount: CELL_COUNT_DEFAULT,
   updateTime: UPDATE_TIME_PC,
-  snakeStartPosition: SNAKE_POSITION_DEFAULT,
+  snakeStartPosition: [SNAKE_POSITION_DEFAULT],
   foodStartPosition: FOOD_POSITION_DEFAULT,
   directionStart: START_DIRECTION,
 }

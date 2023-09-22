@@ -5,35 +5,36 @@ interface SnakeProps {
   snake: number[],
 }
 
-let lastSnake = [-1];
-let res = [<SnakeBlock key={1} index={1} position={1} isBlack={false} />];
+let snakeBlocks: JSX.Element[] = [];
+let lastSnake: number[] = [];
 
 export const Snake: FunctionComponent<SnakeProps> = ({
   snake,
 }) => {
-  useMemo(() => {
-    if (lastSnake[0] !== -1) {
-      let head = snake[0];
-      res.unshift(
-        <SnakeBlock key={head} index={head} position={head} isBlack={true} />
-      )
+  useEffect(() => {
+    if (snakeBlocks.length) {
+      const head = snake[0];
+      snakeBlocks.unshift(<SnakeBlock key={head} index={head} position={head} isBlack={true}/>)
 
-      if (snake.length <= lastSnake.length) {
-        res.pop()
+      if (snake.length === lastSnake?.length) {
+        snakeBlocks.pop();
       }
 
     } else {
-
-      res = snake.map((block, index) => (
-        <SnakeBlock key={snake[index]} index={snake[index]} position={block} isBlack={true} />
+      snakeBlocks = snake.map((block) => (
+        <SnakeBlock key={block} index={block} position={block} isBlack={true}/>
       ));
     }
 
     lastSnake = snake;
   }, [snake]);
 
+  /*snakeBlocks = snake.map((block, index) => (
+    <SnakeBlock key={index} index={index} position={block} isBlack={index % 2 === 0}/>
+  ));*/
+
   return (
-    <>{res}</>
-  );
+    <>{ snakeBlocks }</>
+  )
 }
 
