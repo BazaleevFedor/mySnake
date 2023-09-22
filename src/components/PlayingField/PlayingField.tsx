@@ -2,20 +2,20 @@ import React, {FunctionComponent, useContext, useEffect, useState} from "react";
 import Image from 'next/image';
 import styles from './styles.module.css'
 import {Food} from "@/components/Food/Food";
-import {FIELD_SIZE_MOBIL, mySnakeContext, MySnakeContext, UPDATE_TIME_MOBIL} from "@/app/context";
+import {mySnakeContext, MySnakeContext} from "@/app/context";
 import {Snake} from "@/components/Snake/Snake";
 import {InfoField} from "@/components/InfoField/InfoField";
 import {createPortal} from "react-dom";
-import {isMobile} from "react-device-detect";
 
+const start = new Date().getTime();
 let timer: NodeJS.Timeout;
+let direction = mySnakeContext.directionStart;
 export const PlayingField: FunctionComponent = () => {
   const mySnakeContext = useContext(MySnakeContext);
 
-  let [direction, setDirection] = useState(mySnakeContext.directionStart);
   let [pause, setPause] = useState('ok');
   let [gameState, setGameState] = useState({
-    snake: [mySnakeContext.snakeStartPosition],
+    snake: mySnakeContext.snakeStartPosition,
     food: mySnakeContext.foodStartPosition,
     status: 'init',
   });
@@ -29,11 +29,11 @@ export const PlayingField: FunctionComponent = () => {
     });
 
     window.addEventListener('touchend', (event) => {
-      setDirection((prevState) => getDirectionBySwipe(event, prevState, startX, startY));
+      direction = getDirectionBySwipe(event, direction, startX, startY);
     });
 
     window.addEventListener('keydown', (event) => {
-      setDirection((prevState) => getNextDirection(event.key, prevState));
+      direction = getNextDirection(event.keyCode, direction);
     });
 
     document.getElementById('field')?.addEventListener('touchmove', function(event) {
@@ -51,11 +51,11 @@ export const PlayingField: FunctionComponent = () => {
       });
 
       window.removeEventListener('touchend', (event) => {
-        setDirection((prevState) => getDirectionBySwipe(event, prevState, startX, startY));
+        direction = getDirectionBySwipe(event, direction, startX, startY);
       });
 
       window.removeEventListener('keydown', (event) => {
-        setDirection((prevState) => getNextDirection(event.key, prevState));
+        direction = getNextDirection(event.keyCode, direction);
       });
 
       document.getElementById('field')?.removeEventListener('touchmove', function(event) {
@@ -70,14 +70,16 @@ export const PlayingField: FunctionComponent = () => {
 
   useEffect(() => {
     if (gameState.status === 'ok' && pause === 'ok' || gameState.status === 'init') {
+      const nextPos = async () => {
+        if (gameState.snake[0] === -1) {
+          return {food: mySnakeContext.foodStartPosition, snake: mySnakeContext.snakeStartPosition, status: 'ok'}
+        }
+        return run([...gameState.snake], gameState.food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount);
+      }
+
       timer = setTimeout(() => {
-        setGameState(() => {
-          if (gameState.snake[0] === -1) {
-            return {food: mySnakeContext.foodStartPosition, snake: [mySnakeContext.snakeStartPosition], status: 'ok'}
-          }
-          return run([...gameState.snake], gameState.food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount);
-        });
-      }, mySnakeContext.updateTime)
+        nextPos().then(setGameState).catch(alert);
+      }, mySnakeContext.updateTime);
     } else {
       clearTimeout(timer);
     }
@@ -95,7 +97,7 @@ export const PlayingField: FunctionComponent = () => {
 
       { gameState.status !== 'init' &&
         <>
-          <Snake snake={gameState.snake}/>
+          <Snake snake={gameState.snake} />
           { gameState.status !== 'won' && <Food position={gameState.food}/>}
           { gameState.status !== 'ok' && createPortal(<InfoField status={gameState.status}/>, document.body)}
           { gameState.status === 'ok' && pause !== 'ok' && createPortal(<InfoField status={pause}/>, document.body) }
@@ -136,24 +138,44 @@ export const getNextID = (curId: number, direction: string, fieldSize: number, c
   return nextID;
 }
 
-export const getNextDirection = (key: string, curDirection: string) => {
+export const getNextDirection = (key: number, curDirection: string) => {
   switch (key) {
-    case 'w' || 'W':
+    case 87:
       if (curDirection !== 'up' && curDirection !== 'down') {
         curDirection = 'up';
       }
       break;
-    case 'a' || 'A':
+    case 38:
+      if (curDirection !== 'up' && curDirection !== 'down') {
+        curDirection = 'up';
+      }
+      break;
+    case 65:
       if (curDirection !== 'left' && curDirection !== 'right') {
         curDirection = 'left';
       }
       break;
-    case 's' || 'S':
+    case 37:
+      if (curDirection !== 'left' && curDirection !== 'right') {
+        curDirection = 'left';
+      }
+      break;
+    case 83:
       if (curDirection !== 'up' && curDirection !== 'down') {
         curDirection = 'down';
       }
       break;
-    case 'd' || 'D':
+    case 40:
+      if (curDirection !== 'up' && curDirection !== 'down') {
+        curDirection = 'down';
+      }
+      break;
+    case 68:
+      if (curDirection !== 'left' && curDirection !== 'right') {
+        curDirection = 'right';
+      }
+      break;
+    case 39:
       if (curDirection !== 'left' && curDirection !== 'right') {
         curDirection = 'right';
       }
@@ -203,19 +225,16 @@ export const run = (snake: number[], food: number, direction: string, fieldSize:
   let nextID = getNextID(snakeHeadID, direction, fieldSize, cellCount);
   let status = 'ok';
 
+  /*if (snakeHeadID === 24) {
+    console.log(`24 ${new Date().getTime() - start}`);
+  }*/
+
   if (nextID === food) {
     snake.unshift(nextID);
     if (snake.length === cellCount) {
       status = 'won';
     } else {
-      const snakeSet = new Set(snake);
-
-      food = Math.ceil(Math.random()*(cellCount - snake.length));
-      for (let i = 0; i <= food; i++) {
-        if (snakeSet.has(i)) {
-          food++;
-        }
-      }
+      food = getRandomFood(snake, cellCount);
     }
   } else if (snake.includes(nextID) && nextID !== snake.at(-1)) {
     status = 'lose'
@@ -225,5 +244,17 @@ export const run = (snake: number[], food: number, direction: string, fieldSize:
   }
 
   return {food: food, snake: snake, status: status};
+}
+
+export const getRandomFood = (snake: number[], cellCount: number) => {
+  const snakeSet = new Set(snake);
+  let food = Math.ceil(Math.random()*(cellCount - snake.length));
+  for (let i = 0; i <= food; i++) {
+    if (snakeSet.has(i)) {
+      food++;
+    }
+  }
+
+  return food;
 }
 

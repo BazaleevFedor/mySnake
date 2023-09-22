@@ -15,12 +15,12 @@ const START_DIRECTION: string = 'right';
 
 const LOGO_IMG: string = '/static/logo_text.svg';
 const FIELD_IMG: string = '/static/square_playing_field.svg';
-const FOOD_IMG: string = '/static/food.svg';
-const SNAKE_BLACK_IMG: string = '/static/square_black.svg';
-const SNAKE_BLUE_IMG: string = '/static/square_blue.svg';
-const BLOCK_WON: string = '/static/block_won.svg';
-const BLOCK_LOSE: string = '/static/block_lose.svg';
-const BLOCK_PAUSE: string = '/static/block_pause.svg';
+const FOOD_IMG: string = '/static/food.webp';
+const SNAKE_BLACK_IMG: string = '/static/square_black_ss.webp';
+const SNAKE_BLUE_IMG: string = '/static/square_blue.webp';
+const BLOCK_WON: string = '/static/block_won.webp';
+const BLOCK_LOSE: string = '/static/block_lose.webp';
+const BLOCK_PAUSE: string = '/static/block_pause.webp';
 const COPYRIGHT_TEXT: string = '© 2022, BanzayCorp, Inc';
 
 export const mySnakeContext = {
@@ -37,7 +37,7 @@ export const mySnakeContext = {
   fieldSize: FIELD_SIZE_PC,
   cellCount: CELL_COUNT_DEFAULT,
   updateTime: UPDATE_TIME_PC,
-  snakeStartPosition: SNAKE_POSITION_DEFAULT,
+  snakeStartPosition: [SNAKE_POSITION_DEFAULT],
   foodStartPosition: FOOD_POSITION_DEFAULT,
   directionStart: START_DIRECTION,
 }
