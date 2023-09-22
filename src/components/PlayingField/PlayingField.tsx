@@ -8,11 +8,13 @@ import {InfoField} from "@/components/InfoField/InfoField";
 import {createPortal} from "react-dom";
 import {isMobile} from "react-device-detect";
 
+const start = new Date().getTime();
 let timer: NodeJS.Timeout;
+let direction = mySnakeContext.directionStart;
 export const PlayingField: FunctionComponent = () => {
   const mySnakeContext = useContext(MySnakeContext);
 
-  let [direction, setDirection] = useState(mySnakeContext.directionStart);
+  //let [direction, setDirection] = useState(mySnakeContext.directionStart);
   let [pause, setPause] = useState('ok');
   let [gameState, setGameState] = useState({
     snake: [mySnakeContext.snakeStartPosition],
@@ -29,11 +31,11 @@ export const PlayingField: FunctionComponent = () => {
     });
 
     window.addEventListener('touchend', (event) => {
-      setDirection((prevState) => getDirectionBySwipe(event, prevState, startX, startY));
+      direction = getDirectionBySwipe(event, direction, startX, startY);
     });
 
     window.addEventListener('keydown', (event) => {
-      setDirection((prevState) => getNextDirection(event.key, prevState));
+      direction = getNextDirection(event.key, direction);
     });
 
     document.getElementById('field')?.addEventListener('touchmove', function(event) {
@@ -51,11 +53,11 @@ export const PlayingField: FunctionComponent = () => {
       });
 
       window.removeEventListener('touchend', (event) => {
-        setDirection((prevState) => getDirectionBySwipe(event, prevState, startX, startY));
+        direction = getDirectionBySwipe(event, direction, startX, startY);
       });
 
       window.removeEventListener('keydown', (event) => {
-        setDirection((prevState) => getNextDirection(event.key, prevState));
+        direction = getNextDirection(event.key, direction);
       });
 
       document.getElementById('field')?.removeEventListener('touchmove', function(event) {
@@ -70,14 +72,23 @@ export const PlayingField: FunctionComponent = () => {
 
   useEffect(() => {
     if (gameState.status === 'ok' && pause === 'ok' || gameState.status === 'init') {
-      timer = setTimeout(() => {
-        setGameState(() => {
-          if (gameState.snake[0] === -1) {
-            return {food: mySnakeContext.foodStartPosition, snake: [mySnakeContext.snakeStartPosition], status: 'ok'}
+      const nextPos = async () => {
+        if (gameState.snake[0] === -1) {
+          //return {food: mySnakeContext.foodStartPosition, snake: [mySnakeContext.snakeStartPosition], status: 'ok'}
+
+          let arr = [0];
+          for (let i = 624; i > 20; i--) {
+            arr.push(i);
           }
-          return run([...gameState.snake], gameState.food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount);
-        });
-      }, mySnakeContext.updateTime)
+
+          return {food: mySnakeContext.foodStartPosition, snake: arr, status: 'ok'}
+        }
+        return run([...gameState.snake], gameState.food, direction, mySnakeContext.fieldSize, mySnakeContext.cellCount);
+      }
+
+      timer = setTimeout(() => {
+        nextPos().then(setGameState).catch(alert);
+      }, mySnakeContext.updateTime);
     } else {
       clearTimeout(timer);
     }
@@ -202,6 +213,10 @@ export const run = (snake: number[], food: number, direction: string, fieldSize:
   let snakeHeadID = snake[0];
   let nextID = getNextID(snakeHeadID, direction, fieldSize, cellCount);
   let status = 'ok';
+
+  if (snakeHeadID === 24) {
+    console.log(`24 ${new Date().getTime() - start}`);
+  }
 
   if (nextID === food) {
     snake.unshift(nextID);
