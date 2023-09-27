@@ -11,7 +11,7 @@ let lastSnake: number[] = [];
 export const Snake: FunctionComponent<SnakeProps> = ({
   snake,
 }) => {
-  useEffect(() => {
+  /*useEffect(() => {
     if (snakeBlocks.length) {
       const head = snake[0];
       snakeBlocks.unshift(<SnakeBlock key={head} index={head} position={head} isBlack={true}/>)
@@ -27,11 +27,13 @@ export const Snake: FunctionComponent<SnakeProps> = ({
     }
 
     lastSnake = snake;
-  }, [snake]);
+  }, [snake]);*/
 
-  /*snakeBlocks = snake.map((block, index) => (
-    <SnakeBlock key={index} index={index} position={block} isBlack={index % 2 === 0}/>
-  ));*/
+  useEffect(() => {
+    snakeBlocks = snake.map((block, index) => (
+      <SnakeBlock key={index} index={index} position={block} isBlack={index % 2 === 0}/>
+    ));
+  }, [snake])
 
   return (
     <>{ snakeBlocks }</>
